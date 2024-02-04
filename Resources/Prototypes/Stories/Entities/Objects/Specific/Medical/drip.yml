@@ -17,7 +17,9 @@
         mask:
         - TableMask
   - type: Sprite
-    sprite: Structures/Furniture/chairs.rsi
+    sprite: Stories/Objects/Specific/Medical/drip.rsi
+    noRot: true
+    state: empty
   - type: Pullable
   - type: Damageable
     damageContainer: Inorganic
@@ -42,4 +44,11 @@
   - type: StaticPrice
     price: 10
 
-  - type: Drip
+  - type: Appearance
+  - type: ItemSlots
+    slots:
+      pack:
+        whitelist:
+          tags:
+            - DripBag
+#  - type: Drip

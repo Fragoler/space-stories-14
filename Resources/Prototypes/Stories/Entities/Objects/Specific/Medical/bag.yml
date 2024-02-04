@@ -1,0 +1,62 @@
+- type: entity
+  parent: BaseItem
+  id: DripPack
+  name: Meical bag
+  description: Contains something
+  suffix: empty
+  components:
+  - type: Sprite
+    sprite: Stories/Objects/Specific/Medical/pack.rsi
+    layers:
+      - state: pack
+      - state: pack1
+        map: ["enum.SolutionContainerLayers.Fill"]
+        visible: false
+  - type: Item
+    size: Small
+    sprite: Stories/Objects/Specific/Medical/pack.rsi
+  - type: SolutionContainerManager
+    solutions:
+      pack:
+        maxVol: 50
+        canMix: true
+  - type: RefillableSolution
+    solution: pack
+  - type: DrainableSolution
+    solution: pack
+  - type: ExaminableSolution
+    solution: pack
+  - type: DrawableSolution
+    solution: pack
+  - type: SolutionTransfer
+    canChangeTransferAmount: true
+
+  - type: UserInterface
+    interfaces:
+    - key: enum.TransferAmountUiKey.Key
+      type: TransferAmountBoundUserInterface
+
+  - type: Appearance
+  - type: SolutionContainerVisuals
+    maxFillLevels: 3
+    fillBaseName: pack
+
+  - type: Damageable
+    damageContainer: Inorganic
+
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 5
+      behaviors:
+      - !type:SpillBehavior
+        solution: pack
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+
+  - type: StackPrice
+    price: 10
+  - type: Tag
+    tags:
+    - DripBag
