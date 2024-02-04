@@ -30,20 +30,16 @@
     solution: pack
   - type: SolutionTransfer
     canChangeTransferAmount: true
-
   - type: UserInterface
     interfaces:
     - key: enum.TransferAmountUiKey.Key
       type: TransferAmountBoundUserInterface
-
   - type: Appearance
   - type: SolutionContainerVisuals
     maxFillLevels: 3
     fillBaseName: pack
-
   - type: Damageable
     damageContainer: Inorganic
-
   - type: Destructible
     thresholds:
     - trigger:
@@ -54,7 +50,6 @@
         solution: pack
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
-
   - type: StackPrice
     price: 10
   - type: Tag
