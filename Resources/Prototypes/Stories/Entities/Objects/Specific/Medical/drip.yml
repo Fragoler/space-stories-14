@@ -19,7 +19,24 @@
   - type: Sprite
     sprite: Stories/Objects/Specific/Medical/drip.rsi
     noRot: true
-    state: drip
+    layers:
+      - state: empty
+      - state: drip-packed-fill1
+        map: ["enum.SolutionContainerLayers.Fill"]
+        visible: false
+
+  - type: ItemMapper
+    mapLayers:
+      drip-packed:
+        whitelist:
+          tags:
+            - DripBag
+
+  - type: DripVisual
+
+  - type: SolutionContainerVisuals
+    maxFillLevels: 3
+
   - type: Pullable
   - type: Damageable
     damageContainer: Inorganic

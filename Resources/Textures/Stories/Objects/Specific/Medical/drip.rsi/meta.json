@@ -1,14 +1,26 @@
 {
-  "version": 1,
-  "license": "CC-BY-NC-SA-3.0",
-  "copyright": "created by olbenok (discord)",
-  "size": {
+    "version": 1,
+    "license": "CC-BY-NC-SA-3.0",
+    "copyright": "created by olbenok (discord)",
+    "size": {
     "x": 32,
     "y": 32
-  },
-  "states": [
+    },
+    "states": [
     {
-      "name": "drip"
+        "name": "drip"
+    },
+    {
+        "name": "drip-packed"
+    },
+    {
+        "name": "drip-packed-fill1"
+    },
+    {
+        "name": "drip-packed-fill2"
+    },
+    {
+        "name": "drip-packed-fill3"
     }
-  ]
+    ]
 }

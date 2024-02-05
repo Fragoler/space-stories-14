@@ -44,4 +44,9 @@ public abstract class SharedDripSystem : EntitySystem
     {
 
     }
+
+    private void UpdateAppearance(EntityUid uid, DripComponent visual)
+    {
+        // Only on Client
+    }
 }
