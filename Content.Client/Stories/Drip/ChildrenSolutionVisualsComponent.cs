@@ -7,7 +7,6 @@ namespace Content.Shared.Chemistry.Components
     {
         [DataField]
         public EntityUid? СhildrenItem = null;
-        public SolutionContainerVisuals? SolutionVisualComp = null;
 
         [DataField]
         public int MaxFillLevels = 0;
@@ -31,6 +30,13 @@ namespace Content.Shared.Chemistry.Components
         public SpriteSpecifier? MetamorphicDefaultSprite;
         [DataField]
         public LocId MetamorphicNameFull = "transformable-container-component-glass";
+
+        /// <summary>
+        /// Which solution of the SolutionContainerManagerComponent to represent.
+        /// If not set, will work as default.
+        /// </summary>
+        [DataField]
+        public string? SolutionName;
 
         [DataField]
         public string InitialName = string.Empty;

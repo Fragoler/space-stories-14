@@ -9,11 +9,9 @@
     sprite: Stories/Objects/Specific/Medical/pack.rsi
     layers:
       - state: pack
-        map: ["enum.DripPackVisualsLayers.Item"]
       - state: pack1
         map: ["enum.SolutionContainerLayers.Fill"]
         visible: false
-
   - type: Item
     size: Small
     sprite: Stories/Objects/Specific/Medical/pack.rsi
@@ -36,12 +34,10 @@
     interfaces:
     - key: enum.TransferAmountUiKey.Key
       type: TransferAmountBoundUserInterface
-
   - type: Appearance
   - type: SolutionContainerVisuals
     maxFillLevels: 3
     fillBaseName: pack
-
   - type: Damageable
     damageContainer: Inorganic
   - type: Destructible

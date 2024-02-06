@@ -7,7 +7,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Client.Chemistry.Visualizers;
 
-public sealed class ChildrenSolutionVisualsSystem : VisualizerSystem<SolutionContainerVisualsComponent>
+public sealed class ChildrenSolutionVisualsSystem : VisualizerSystem<ChildrenSolutionVisualsComponent>
 {
     [Dependency] private readonly IPrototypeManager _prototype = default!;
 
@@ -30,26 +30,34 @@ public sealed class ChildrenSolutionVisualsSystem : VisualizerSystem<SolutionCon
 
         var query = AllEntityQuery<ChildrenSolutionVisualsComponent>();
 
-        while (query.MoveNext(out var childrenVisual))
+        while (query.MoveNext(out var uid, out var childrenVisual))
         {
 
-            // Check if the solution that was updated is the one set as represented
-            if (!string.IsNullOrEmpty(component.SolutionName))
+            if (!TryComp<SpriteComponent>(uid, out var spriteComp))
+                return;
+
+
+            if (!spriteComp.LayerMapTryGet(childrenVisual.Layer, out var fillLayer))
+                return;
+
+
+            if (childrenVisual.СhildrenItem is null)
             {
-                if (AppearanceSystem.TryGetData<string>(uid, SolutionContainerVisuals.SolutionName, out var name,
-                    args.Component) && name != component.SolutionName)
+                if (childrenVisual.EmptySpriteName == null)
+                    spriteComp.LayerSetVisible(fillLayer, false);
+                else
                 {
-                    return;
+                    spriteComp.LayerSetState(fillLayer, childrenVisual.EmptySpriteName);
+                    if (childrenVisual.ChangeColor)
+                        spriteComp.LayerSetColor(fillLayer, childrenVisual.EmptySpriteColor);
                 }
+                return;
             }
 
-            if (!AppearanceSystem.TryGetData<float>(uid, SolutionContainerVisuals.FillFraction, out var fraction, args.Component))
-                return;
+            var item = (EntityUid) childrenVisual.СhildrenItem;
 
-            if (args.Sprite == null)
-                return;
 
-            if (!args.Sprite.LayerMapTryGet(component.Layer, out var fillLayer))
+            if (!AppearanceSystem.TryGetData<float>(item, SolutionContainerVisuals.FillFraction, out var fraction))
                 return;
 
             // Currently some solution methods such as overflowing will try to update appearance with a
@@ -57,66 +65,65 @@ public sealed class ChildrenSolutionVisualsSystem : VisualizerSystem<SolutionCon
             // a giant error sign and error for debug.
             if (fraction > 1f)
             {
-                Logger.Error("Attempted to set solution container visuals volume ratio on " + ToPrettyString(uid) + " to a value greater than 1. Volume should never be greater than max volume!");
                 fraction = 1f;
             }
-            if (component.Metamorphic)
-            {
-                if (args.Sprite.LayerMapTryGet(component.BaseLayer, out var baseLayer))
-                {
-                    var hasOverlay = args.Sprite.LayerMapTryGet(component.OverlayLayer, out var overlayLayer);
 
-                    if (AppearanceSystem.TryGetData<string>(uid, SolutionContainerVisuals.BaseOverride,
-                        out var baseOverride,
-                        args.Component))
+            if (childrenVisual.Metamorphic)
+            {
+                if (spriteComp.LayerMapTryGet(childrenVisual.BaseLayer, out var baseLayer))
+                {
+                    var hasOverlay = spriteComp.LayerMapTryGet(childrenVisual.OverlayLayer, out var overlayLayer);
+
+                    if (AppearanceSystem.TryGetData<string>(item, SolutionContainerVisuals.BaseOverride, out var baseOverride))
                     {
                         _prototype.TryIndex<ReagentPrototype>(baseOverride, out var reagentProto);
 
                         if (reagentProto?.MetamorphicSprite is { } sprite)
                         {
-                            args.Sprite.LayerSetSprite(baseLayer, sprite);
-                            args.Sprite.LayerSetVisible(fillLayer, false);
+                            spriteComp.LayerSetSprite(baseLayer, sprite);
+                            spriteComp.LayerSetVisible(fillLayer, false);
                             if (hasOverlay)
-                                args.Sprite.LayerSetVisible(overlayLayer, false);
+                                spriteComp.LayerSetVisible(overlayLayer, false);
                             return;
                         }
                         else
                         {
                             if (hasOverlay)
-                                args.Sprite.LayerSetVisible(overlayLayer, true);
-                            if (component.MetamorphicDefaultSprite != null)
-                                args.Sprite.LayerSetSprite(baseLayer, component.MetamorphicDefaultSprite);
+                                spriteComp.LayerSetVisible(overlayLayer, true);
+                            if (childrenVisual.MetamorphicDefaultSprite != null)
+                                spriteComp.LayerSetSprite(baseLayer, childrenVisual.MetamorphicDefaultSprite);
                         }
                     }
                 }
             }
 
-            int closestFillSprite = ContentHelpers.RoundToLevels(fraction, 1, component.MaxFillLevels + 1);
+            var closestFillSprite = ContentHelpers.RoundToLevels(fraction, 1, childrenVisual.MaxFillLevels + 1);
 
             if (closestFillSprite > 0)
             {
-                if (component.FillBaseName == null)
+                if (childrenVisual.FillBaseName == null)
                     return;
 
-                args.Sprite.LayerSetVisible(fillLayer, true);
+                spriteComp.LayerSetVisible(fillLayer, true);
 
-                var stateName = component.FillBaseName + closestFillSprite;
-                args.Sprite.LayerSetState(fillLayer, stateName);
+                var stateName = childrenVisual.FillBaseName + closestFillSprite;
+                spriteComp.LayerSetState(fillLayer, stateName);
 
-                if (component.ChangeColor && AppearanceSystem.TryGetData<Color>(uid, SolutionContainerVisuals.Color, out var color, args.Component))
-                    args.Sprite.LayerSetColor(fillLayer, color);
+                if (childrenVisual.ChangeColor && AppearanceSystem.TryGetData<Color>(item, SolutionContainerVisuals.Color, out var color))
+                    spriteComp.LayerSetColor(fillLayer, color);
             }
             else
             {
-                if (component.EmptySpriteName == null)
-                    args.Sprite.LayerSetVisible(fillLayer, false);
+                if (childrenVisual.EmptySpriteName == null)
+                    spriteComp.LayerSetVisible(fillLayer, false);
                 else
                 {
-                    args.Sprite.LayerSetState(fillLayer, component.EmptySpriteName);
-                    if (component.ChangeColor)
-                        args.Sprite.LayerSetColor(fillLayer, component.EmptySpriteColor);
+                    spriteComp.LayerSetState(fillLayer, childrenVisual.EmptySpriteName);
+                    if (childrenVisual.ChangeColor)
+                        spriteComp.LayerSetColor(fillLayer, childrenVisual.EmptySpriteColor);
                 }
             }
         }
     }
+
 }

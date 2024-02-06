@@ -14,8 +14,6 @@ public sealed partial class DripComponent : Component
     ///     The <see cref="ItemSlot"/> that stores the actual item. The entity whitelist, sounds, and other
     ///     behaviours are specified by this <see cref="ItemSlot"/> definition.
     /// </summary>
-    [DataField, ViewVariables]
+    [DataField("dripSlot"), ViewVariables]
     public ItemSlot DripPackedSlot = new();
-
-    public string DripTag = "DripBag";
 }
