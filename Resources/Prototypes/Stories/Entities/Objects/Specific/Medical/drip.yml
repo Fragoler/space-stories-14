@@ -24,12 +24,12 @@
       - state: drip-packed-fill1
         map: ["enum.SolutionContainerLayers.Fill"]
         visible: false
-#  - type: ItemMapper
-#    mapLayers:
-#      drip-packed:
-#        whitelist:
-#          tags:
-#            - DripBag
+  - type: ItemMapper
+    mapLayers:
+      drip-packed:
+        whitelist:
+          tags:
+            - DripBag
   - type: Drip
     dripSlot:
       whitelist:

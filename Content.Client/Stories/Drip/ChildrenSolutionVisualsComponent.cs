@@ -7,7 +7,8 @@ namespace Content.Shared.Chemistry.Components
     {
         [DataField]
         public EntityUid? СhildrenItem = null;
-
+        [DataField]
+        public float? Fraction = null;
         [DataField]
         public int MaxFillLevels = 0;
         [DataField]

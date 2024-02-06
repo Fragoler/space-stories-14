@@ -3,7 +3,6 @@ using Content.Shared.Interaction;
 using Content.Shared.Lock;
 using Content.Shared.Verbs;
 using Content.Shared.Stories.Drip;
-using Content.Client.Stories.Drip;
 using Content.Shared.Tag;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;

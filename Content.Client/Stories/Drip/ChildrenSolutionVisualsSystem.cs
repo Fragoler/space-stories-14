@@ -43,6 +43,7 @@ public sealed class ChildrenSolutionVisualsSystem : VisualizerSystem<ChildrenSol
 
             if (childrenVisual.СhildrenItem is null)
             {
+                childrenVisual.Fraction = null;
                 if (childrenVisual.EmptySpriteName == null)
                     spriteComp.LayerSetVisible(fillLayer, false);
                 else
@@ -57,7 +58,7 @@ public sealed class ChildrenSolutionVisualsSystem : VisualizerSystem<ChildrenSol
             var item = (EntityUid) childrenVisual.СhildrenItem;
 
 
-            if (!AppearanceSystem.TryGetData<float>(item, SolutionContainerVisuals.FillFraction, out var fraction))
+            if (!AppearanceSystem.TryGetData<float>(item, SolutionContainerVisuals.FillFraction, out var fraction) || fraction != childrenVisual.Fraction)
                 return;
 
             // Currently some solution methods such as overflowing will try to update appearance with a
@@ -67,6 +68,8 @@ public sealed class ChildrenSolutionVisualsSystem : VisualizerSystem<ChildrenSol
             {
                 fraction = 1f;
             }
+
+            childrenVisual.Fraction = fraction;
 
             if (childrenVisual.Metamorphic)
             {
