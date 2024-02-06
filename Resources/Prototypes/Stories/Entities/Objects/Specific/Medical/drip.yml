@@ -21,20 +21,17 @@
     noRot: true
     layers:
       - state: drip
+      - state: drip-packed
+        map: ["enum.DripLayers.Packed"]
+        visible: false
       - state: drip-packed-fill1
         map: ["enum.SolutionContainerLayers.Fill"]
         visible: false
-  - type: ItemMapper
-    mapLayers:
-      drip-packed:
-        whitelist:
-          tags:
-            - DripBag
   - type: Drip
     dripSlot:
       whitelist:
         tags:
-          - DripBag
+        - DripBag
   - type: ChildrenSolutionVisuals
     maxFillLevels: 3
     fillBaseName: drip-packed-fill

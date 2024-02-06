@@ -58,7 +58,7 @@ public sealed class ChildrenSolutionVisualsSystem : VisualizerSystem<ChildrenSol
             var item = (EntityUid) childrenVisual.СhildrenItem;
 
 
-            if (!AppearanceSystem.TryGetData<float>(item, SolutionContainerVisuals.FillFraction, out var fraction) || fraction != childrenVisual.Fraction)
+            if (!AppearanceSystem.TryGetData<float>(item, SolutionContainerVisuals.FillFraction, out var fraction) || fraction == childrenVisual.Fraction)
                 return;
 
             // Currently some solution methods such as overflowing will try to update appearance with a

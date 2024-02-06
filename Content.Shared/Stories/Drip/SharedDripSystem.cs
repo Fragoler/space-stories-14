@@ -26,7 +26,6 @@ public abstract class SharedDripSystem : EntitySystem
 
     private void OnComponentInit(EntityUid uid, DripComponent drip, ComponentInit args)
     {
-        Logger.Error("Here");
         _itemSlots.AddItemSlot(uid, "DripPacked", drip.DripPackedSlot);
     }
 
