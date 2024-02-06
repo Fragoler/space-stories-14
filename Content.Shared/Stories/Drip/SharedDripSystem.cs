@@ -25,28 +25,23 @@ public abstract class SharedDripSystem : EntitySystem
         SubscribeLocalEvent<DripComponent, EntRemovedFromContainerMessage>(OnContainerModified);
     }
 
-    private void OnComponentInit(EntityUid uid, DripComponent drip, ComponentInit args)
+    public virtual void OnComponentInit(EntityUid uid, DripComponent drip, ComponentInit args)
     {
         _itemSlots.AddItemSlot(uid, "DripPacked", drip.DripPackedSlot);
     }
 
-    private void OnComponentRemove(EntityUid uid, DripComponent drip, ComponentRemove args)
+    public virtual void OnComponentRemove(EntityUid uid, DripComponent drip, ComponentRemove args)
     {
         _itemSlots.RemoveItemSlot(uid, drip.DripPackedSlot);
     }
 
-    private void OnComponentStartup(EntityUid uid, DripComponent drip, ComponentStartup args)
+    public virtual void OnComponentStartup(EntityUid uid, DripComponent drip, ComponentStartup args)
     {
 
     }
 
-    private void OnContainerModified(EntityUid uid, DripComponent cabinet, ContainerModifiedMessage args)
+    public virtual void OnContainerModified(EntityUid uid, DripComponent cabinet, ContainerModifiedMessage args)
     {
 
-    }
-
-    private void UpdateAppearance(EntityUid uid, DripComponent visual)
-    {
-        // Only on Client
     }
 }

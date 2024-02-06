@@ -16,4 +16,6 @@ public sealed partial class DripComponent : Component
     /// </summary>
     [DataField, ViewVariables]
     public ItemSlot DripPackedSlot = new();
+
+    public string DripTag = "DripBag";
 }
