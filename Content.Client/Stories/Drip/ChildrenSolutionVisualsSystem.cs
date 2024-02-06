@@ -34,11 +34,11 @@ public sealed class ChildrenSolutionVisualsSystem : VisualizerSystem<ChildrenSol
         {
 
             if (!TryComp<SpriteComponent>(uid, out var spriteComp))
-                return;
+                continue;
 
 
             if (!spriteComp.LayerMapTryGet(childrenVisual.Layer, out var fillLayer))
-                return;
+                continue;
 
 
             if (childrenVisual.СhildrenItem is null)
@@ -52,14 +52,14 @@ public sealed class ChildrenSolutionVisualsSystem : VisualizerSystem<ChildrenSol
                     if (childrenVisual.ChangeColor)
                         spriteComp.LayerSetColor(fillLayer, childrenVisual.EmptySpriteColor);
                 }
-                return;
+                continue;
             }
 
             var item = (EntityUid) childrenVisual.СhildrenItem;
 
 
-            if (!AppearanceSystem.TryGetData<float>(item, SolutionContainerVisuals.FillFraction, out var fraction) || fraction == childrenVisual.Fraction)
-                return;
+            if (!AppearanceSystem.TryGetData<float>(item, SolutionContainerVisuals.FillFraction, out var fraction) || childrenVisual.Fraction == fraction)
+                continue;
 
             // Currently some solution methods such as overflowing will try to update appearance with a
             // volume greater than the max volume. We'll clamp it so players don't see
@@ -87,7 +87,7 @@ public sealed class ChildrenSolutionVisualsSystem : VisualizerSystem<ChildrenSol
                             spriteComp.LayerSetVisible(fillLayer, false);
                             if (hasOverlay)
                                 spriteComp.LayerSetVisible(overlayLayer, false);
-                            return;
+                            continue;
                         }
                         else
                         {
