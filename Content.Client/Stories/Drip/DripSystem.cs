@@ -17,7 +17,20 @@ namespace Content.Client.Stories.Drip;
 public sealed class DripSystem : SharedDripSystem
 {
     [Dependency] private readonly TagSystem _tag = default!;
+
+    protected override void OnComponentInit(EntityUid uid, DripComponent drip, ComponentInit args)
+    {
+        base.OnComponentInit(uid, drip, args);
+
+        UpdateAppereance(uid, drip);
+    }
+
     protected override void OnContainerModified(EntityUid uid, DripComponent drip, ContainerModifiedMessage args)
+    {
+        UpdateAppereance(uid, drip);
+    }
+
+    private void UpdateAppereance(EntityUid uid, DripComponent drip)
     {
         if (!TryComp<ChildrenSolutionVisualsComponent>(uid, out var childrenVisualComp))
         {
@@ -44,6 +57,7 @@ public sealed class DripSystem : SharedDripSystem
         }
     }
 }
+
 
 public enum DripLayers
 {

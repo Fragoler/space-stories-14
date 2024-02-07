@@ -1,6 +1,8 @@
 using Content.Shared.Containers.ItemSlots;
+using Content.Shared.Chemistry.Components;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
+
 
 namespace Content.Shared.Stories.Drip;
 
@@ -18,4 +20,18 @@ public sealed partial class DripComponent : Component
     public ItemSlot DripPackedSlot = new();
 
     public string DripTag = "DripBag";
+
+    public string SolutionPackName = "pack";
+
+    public Entity<SolutionComponent>? BloodSolution = null;
+
+
+    public float AccumulatedFrametime = 0.0f;
+
+    /// <summary>
+    ///     How frequently should this drip update, in seconds?
+    /// </summary>
+    [DataField]
+    public float UpdateInterval = 1.0f;
+
 }
