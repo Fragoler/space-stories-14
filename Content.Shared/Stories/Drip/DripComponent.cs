@@ -2,6 +2,7 @@ using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Chemistry.Components;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
+using Content.Shared.FixedPoint;
 
 
 namespace Content.Shared.Stories.Drip;
@@ -12,10 +13,6 @@ namespace Content.Shared.Stories.Drip;
 [RegisterComponent, NetworkedComponent]
 public sealed partial class DripComponent : Component
 {
-    /// <summary>
-    ///     The <see cref="ItemSlot"/> that stores the actual item. The entity whitelist, sounds, and other
-    ///     behaviours are specified by this <see cref="ItemSlot"/> definition.
-    /// </summary>
     [DataField("dripSlot"), ViewVariables]
     public ItemSlot DripPackedSlot = new();
 
@@ -23,8 +20,16 @@ public sealed partial class DripComponent : Component
 
     public string SolutionPackName = "pack";
 
-    public Entity<SolutionComponent>? BloodSolution = null;
+    public Entity<SolutionComponent>? PackSolution = null;
 
+    [DataField, ViewVariables]
+    public EntityUid? ConnectedEnt = null;
+
+    [ViewVariables(VVAccess.ReadWrite)]
+    public FixedPoint2 TransferAmount { get; set; } = FixedPoint2.New(2);
+
+    [ViewVariables(VVAccess.ReadWrite)]
+    public bool CanChangeTransferAmount { get; set; } = false;
 
     public float AccumulatedFrametime = 0.0f;
 

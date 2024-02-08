@@ -1,27 +1,21 @@
 using Content.Shared.Stories.Drip;
-using Content.Server.Body.Components;
 using Content.Server.Chemistry.Containers.EntitySystems;
-using Content.Server.Chemistry.ReactionEffects;
 using Content.Server.Fluids.EntitySystems;
 using Content.Server.Forensics;
-using Content.Server.HealthExaminable;
-using Content.Server.Popups;
 using Content.Shared.Alert;
 using Content.Shared.Chemistry.Components;
-using Content.Shared.Chemistry.EntitySystems;
-using Content.Shared.Chemistry.Reaction;
 using Content.Shared.Damage;
-using Content.Shared.Damage.Prototypes;
 using Content.Shared.Drunk;
 using Content.Shared.FixedPoint;
-using Content.Shared.IdentityManagement;
 using Content.Shared.Mobs.Systems;
-using Content.Shared.Popups;
-using Content.Shared.Rejuvenate;
 using Content.Shared.Speech.EntitySystems;
 using Robust.Server.Audio;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+using Content.Server.Popups;
+using Content.Shared.Chemistry.Reagent;
+using Content.Shared.Chemistry;
+using Content.Shared.Forensics;
 
 namespace Content.Server.Stories.Drip;
 
@@ -39,6 +33,7 @@ public sealed class DripSystem : SharedDripSystem
     [Dependency] private readonly SharedStutteringSystem _stutteringSystem = default!;
     [Dependency] private readonly AlertsSystem _alertsSystem = default!;
     [Dependency] private readonly ForensicsSystem _forensicsSystem = default!;
+    [Dependency] private readonly ReactiveSystem _reactiveSystem = default!;
 
     public override void Update(float frameTime)
     {
@@ -61,11 +56,39 @@ public sealed class DripSystem : SharedDripSystem
 
             var packedItem = (EntityUid) drip.DripPackedSlot.ContainerSlot.ContainedEntity;
 
-            if (!_solutionContainerSystem.ResolveSolution(packedItem, drip.SolutionPackName, ref drip.BloodSolution, out var dripSolution))
+            if (drip.ConnectedEnt is null)
+            {
                 continue;
+            }
 
-
+            TryInject(uid, drip, packedItem, (EntityUid) drip.ConnectedEnt);
         }
     }
 
+    private void TryInject(EntityUid uid, DripComponent drip, EntityUid packedItem, EntityUid target)
+    {
+        if (!_solutionContainerSystem.ResolveSolution(packedItem, drip.SolutionPackName, ref drip.PackSolution, out var packSolution))
+            return;
+
+        if (!_solutionContainerSystem.TryGetInjectableSolution(target, out var targetSoln, out var targetSolution))
+        {
+            return;
+        }
+
+        if (targetSoln is null || drip.PackSolution is null)
+        {
+            return;
+        }
+
+        var realTransferAmount = FixedPoint2.Min(drip.TransferAmount, targetSolution.AvailableVolume);
+
+        var removedSolution = _solutionContainerSystem.SplitSolution((Entity<SolutionComponent>) drip.PackSolution, realTransferAmount);
+        if (targetSolution.CanAddSolution(removedSolution))
+            return;
+        _reactiveSystem.DoEntityReaction(target, removedSolution, ReactionMethod.Injection);
+        _solutionContainerSystem.TryAddSolution((Entity<SolutionComponent>) targetSoln, removedSolution);
+
+        var ev = new TransferDnaEvent { Donor = packedItem, Recipient = target };
+        RaiseLocalEvent(target, ref ev);
+    }
 }
