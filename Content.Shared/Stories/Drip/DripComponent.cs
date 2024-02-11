@@ -22,6 +22,9 @@ public sealed partial class DripComponent : Component
 
     public Entity<SolutionComponent>? PackSolution = null;
 
+    [DataField]
+    public bool HaveCapillar = true;
+
     [DataField, ViewVariables]
     public EntityUid? ConnectedEnt = null;
 
